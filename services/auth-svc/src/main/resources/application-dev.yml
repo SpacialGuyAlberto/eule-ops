@@ -1,0 +1,46 @@
+server:
+  port: 8080                         # puerto HTTP local
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/euleops?currentSchema=auth
+    username: postgres
+    password: LeiserHazard1996!
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        default_schema: auth
+        hbm2ddl.create_namespaces: true   # ← crea el schema si falta
+  sql:
+    init:
+      mode: never                         # ← evita ejecutar schema.sql/classes
+
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+
+  web:
+    locale: en
+    locale-resolver: accept_header
+    cors:
+      allowed-origins: "http://localhost:4200"
+      allowed-methods: "*"
+      allowed-headers: "*"
+      allow-credentials: true
+
+jwt:
+  secret: FmnJx4qH3cDLm+xtt1Cq4eJsEjM3JZE5mkDk4G7etsA=
+  expirationMs: 3600000
+
+notification:
+  host: http://notification-svc:8080   # ← usada por @FeignClient
+
+
+notification-client:
+  api:
+    base-path: http://notification-svc:8080

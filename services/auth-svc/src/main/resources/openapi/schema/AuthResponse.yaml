@@ -1,0 +1,12 @@
+components:
+  schemas:
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: JWT Bearer token
+        tokenType:
+          type: string
+          example: Bearer
+      required: [token, tokenType]

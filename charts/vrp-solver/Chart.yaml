@@ -1,0 +1,7 @@
+apiVersion: v2
+name: vrp-solver
+description: "Vehicle-Routing solver (OR-Tools) with Redis job cache"
+type: application
+
+version: 0.1.2           # chart
+appVersion: "0.4.0"      # imagen de la app

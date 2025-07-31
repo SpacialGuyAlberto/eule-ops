@@ -1,0 +1,32 @@
+global:
+  imageRegistry: registry.example.com/euleops
+  imagePullPolicy: IfNotPresent
+
+  kafka:
+    bootstrapServers: kafka-shared-kafka-bootstrap:9092
+  schemaRegistry:
+    url: http://kafka-shared-cp-schema-registry:8081
+
+# Valores que comparten la mayoría de micro-servicios
+commonResources:
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+  requests:
+    cpu: "250m"
+    memory: "256Mi"
+
+#####################################################
+# Sub-charts obtienen los tags desde aquí
+#####################################################
+ingest:
+  image:
+    tag: "0.2.3"
+  resources: *commonResources
+
+inventory:
+  image:
+    tag: "0.3.1"
+  resources: *commonResources
+
+# …repite para risk-engine, kanban, etc.

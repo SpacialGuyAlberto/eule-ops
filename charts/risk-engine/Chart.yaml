@@ -1,0 +1,7 @@
+apiVersion: v2
+name: risk-engine
+description: "Graph-SAGE risk-scoring service (TorchServe + Feast)"
+type: application
+
+version: 0.1.3          # chart
+appVersion: "1.0.0"     # imagen del servicio

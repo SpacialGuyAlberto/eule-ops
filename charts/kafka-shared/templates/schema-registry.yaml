@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "kafka-shared.fullname" . }}-schema-registry
+  labels: {{- include "kafka-shared.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.schemaRegistry.replicas }}
+  selector:
+    matchLabels:
+      app: schema-registry
+  template:
+    metadata:
+      labels:
+        app: schema-registry
+    spec:
+      containers:
+        - name: schema-registry
+          image: {{ .Values.schemaRegistry.image }}
+          ports:
+            - containerPort: {{ .Values.schemaRegistry.service.port }}
+          env:
+            - name: SCHEMA_REGISTRY_HOST_NAME
+              value: schema-registry
+            - name: SCHEMA_REGISTRY_LISTENERS
+              value: {{ .Values.schemaRegistry.config."schema.registry.listeners" | quote }}
+            - name: SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS
+              value: {{ .Values.schemaRegistry.config."kafkastore.bootstrap.servers" | quote }}
+            - name: SCHEMA_REGISTRY_COMPATIBILITY_LEVEL
+              value: {{ .Values.schemaRegistry.config."compatibility.level" | quote }}
+          resources: {{- toYaml .Values.schemaRegistry.resources | nindent 12 }}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: schema-registry
+spec:
+  ports:
+    - port: {{ .Values.schemaRegistry.service.port }}
+      targetPort: {{ .Values.schemaRegistry.service.port }}
+  selector:
+    app: schema-registry

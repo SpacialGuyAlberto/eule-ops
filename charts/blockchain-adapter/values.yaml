@@ -1,0 +1,27 @@
+replicaCount: 1            # un pod es suficiente
+
+image:
+  repository: "{{ .Values.global.imageRegistry }}/blockchain-adapter"
+  tag: "0.3.2"
+  pullPolicy: IfNotPresent
+
+env:
+  KAFKA_BOOTSTRAP_SERVERS: "{{ .Values.global.kafka.bootstrapServers }}"
+  INCIDENT_TOPIC:          "incident.*"
+  POLYGON_RPC_URL:         "https://polygon-rpc.com"
+  CONTRACT_ADDRESS:        "0x1234abcd...ef56"
+  WALLET_PRIVATE_KEY_SECRET: polygon-wallet-secret
+  IPFS_API_ENDPOINT:       "https://ipfs.infura.io:5001"
+  BATCH_INTERVAL_SEC:      "3600"            # anclar cada 1 h
+  LOG_LEVEL:               "INFO"
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 256Mi
+  limits:
+    cpu: 400m
+    memory: 512Mi
+
+service:
+  port: 8080         # health / metrics

@@ -1,0 +1,6 @@
+apiVersion: v2
+name: ingest
+description: "Faust-based Ingest & Normalizer service"
+type: application
+version: 0.1.5        # versión del *chart*
+appVersion: "0.2.3"   # versión de la app (imagen)

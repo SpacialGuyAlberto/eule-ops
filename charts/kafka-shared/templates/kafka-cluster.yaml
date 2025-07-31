@@ -1,0 +1,39 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: {{ include "kafka-shared.fullname" . }}
+  labels: {{- include "kafka-shared.labels" . | nindent 4 }}
+spec:
+  kafka:
+    version: {{ .Values.kafkaVersion }}
+    replicas: {{ .Values.kafka.replicas }}
+    image: {{ .Values.kafka.image }}
+    listeners:
+      - name: external
+        port: 9094
+        type: nodeport
+        tls: false
+      - name: internal
+        port: 9092
+        type: internal
+        tls: true
+    kraft:
+      controllers: {{ .Values.kafka.kraft.controllers }}
+      storage:
+        type: {{ .Values.kafka.kraft.storage.type }}
+        size: {{ .Values.kafka.kraft.storage.size }}
+    config: {{- toYaml .Values.kafka.config | nindent 6 }}
+    storage:
+      type: {{ .Values.kafka.storage.type }}
+      size: {{ .Values.kafka.storage.size }}
+      class: {{ .Values.kafka.storage.class }}
+    resources: {{- toYaml .Values.kafka.resources | nindent 6 }}
+    jmxOptions:
+      enabled: {{ .Values.kafka.jmx.enabled }}
+      port: {{ .Values.kafka.jmx.port }}
+
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}
+
+  # No ZooKeeper section because we are in KRaft mode

@@ -1,0 +1,117 @@
+# --------------------------------------------------
+# 1) Parámetros GLOBALes usados en plantillas
+# --------------------------------------------------
+kafkaVersion: 3.6.0
+namespace: kafka-shared
+
+# --------------------------------------------------
+# 2) Configuración del clúster Kafka (Strimzi)
+# --------------------------------------------------
+kafka:
+  replicas: 3
+  image: quay.io/strimzi/kafka:latest-kafka-3.6.0
+
+  # --- Almacenamiento de datos de los brokers ---
+  storage:
+    type: persistent-claim
+    size: 2Ti             # 2 TB por broker
+    class: fast-ssd       # StorageClass de tu nube / bare-metal
+
+  # --- Config KRaft & QoS ---
+  kraft:
+    controllers: 3
+    storage:
+      type: persistent-claim
+      size: 10Gi          # metadatos KRaft (pequeño)
+  config:
+    num.partitions: 12
+    default.replication.factor: 3
+    min.insync.replicas: 2
+    log.retention.hours: 168              # 7 d
+    transaction.state.log.replication.factor: 3
+    transaction.state.log.min.isr: 2
+    auto.create.topics.enable: "false"
+
+  # --- Exposición de listeners ---
+  listeners:
+    external:
+      enabled: true
+      type: nodeport
+    internal:
+      authentication:
+        type: tls
+
+  # --- Recursos de broker ---
+  resources:
+    requests:
+      cpu: 1000m
+      memory: 2Gi
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+
+  # --- JMX Exporter para Prom + Grafana ---
+  jmx:
+    enabled: true
+    port: 9999
+
+# --------------------------------------------------
+# 3) Schema-Registry (Confluent OSS)
+# --------------------------------------------------
+schemaRegistry:
+  enabled: true
+  image: confluentinc/cp-schema-registry:7.6.0
+  replicas: 1
+  service:
+    port: 8081
+  config:
+    kafkastore.bootstrap.servers: PLAINTEXT://kafka-shared-kafka-bootstrap:9092
+    schema.registry.listeners: http://0.0.0.0:8081
+    compatibility.level: BACKWARD
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+
+# --------------------------------------------------
+# 4) MirrorMaker 2  (Edge ⇆ Cloud / DR) – opcional
+# --------------------------------------------------
+mirrorMaker2:
+  enabled: false
+  # Si lo habilitas añade bloques source/target:
+  # clusters:
+  #   source: edge
+  #   target: cloud
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 1
+      memory: 2Gi
+
+# --------------------------------------------------
+# 5) Tópicos oficiales (CRD KafkaTopic)
+# --------------------------------------------------
+topics:
+  rawThermo:
+    name: raw.thermo
+    partitions: 6
+    replicas: 3
+    retentionHours: 48                   # 2 d
+
+  cleanThermo:
+    name: clean.thermo
+    partitions: 12
+    replicas: 3
+    retentionHours: 168                 # 7 d
+    cleanupPolicy: compact
+
+  orderCreated:
+    name: order.created
+    partitions: 6
+    replicas: 3
+    retentionHours: 720                 # 30 d

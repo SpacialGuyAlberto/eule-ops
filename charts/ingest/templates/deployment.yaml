@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ingest.fullname" . }}
+  labels:
+    app: {{ include "ingest.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "ingest.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "ingest.fullname" . }}
+    spec:
+      containers:
+        - name: ingest
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "ingest.fullname" . }}-env
+          env:
+            - name: TRANSACTIONAL_ID
+              value: "{{ .Values.env.TRANSACTIONAL_ID_PREFIX }}-$(HOSTNAME)"
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.service.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          resources: {{- toYaml .Values.resources | nindent 12 }}

@@ -1,6 +1,7 @@
 package com.euleops.core.outbox;
 
 import com.euleops.core.outbox.repository.OutboxEventRepository;
+import jakarta.persistence.Entity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,10 +17,11 @@ public class OutboxPublisher {
 
     @Scheduled(fixedRate = 5000)
     @Transactional
+
     public void publish() {
         repo.findTop100ByPublishedFalseOrderByCreatedAtAsc()
                 .forEach(ev -> {
-                    kafka.send(ev.getEventType(), ev.getAggregateId(), ev.getPayload());
+                    kafka.send(ev.getType(), ev.getAggregateId(), String.valueOf(ev.getPayload()));
                     ev.setPublished(true);
                 });
     }

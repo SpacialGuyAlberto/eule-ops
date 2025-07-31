@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "inventory.fullname" . }}
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ include "inventory.fullname" . }}
+  ports:
+    - name: http
+      port: 8000
+      targetPort: http

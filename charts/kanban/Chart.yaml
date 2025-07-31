@@ -1,0 +1,9 @@
+apiVersion: v2
+name: kanban
+description: "Kanban lifecycle board – FastAPI + WebSockets"
+type: application
+
+# Versión del chart (infra) – no tiene que coincidir con la imagen
+version: 0.1.4
+# Versión real del servicio (usada en image.tag por defecto)
+appVersion: "0.5.0"

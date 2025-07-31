@@ -1,0 +1,20 @@
+spring:
+  autoconfigure:               # Gateway no necesita BBDD
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+
+  cloud:
+    gateway:
+      routes:
+        # ---------- AUTH ----------
+        - id: auth-service
+          uri: http://auth-svc:8080            # nombre del servicio + PUERTO INTERNO
+          predicates:
+            - Path=/auth/**                    # sin StripPrefix
+
+        # ---------- NOTIFICATION ----------
+        - id: notification-service
+          uri: http://notification-svc:8080    # idem para noti-svc
+          predicates:
+            - Path=/notification/**

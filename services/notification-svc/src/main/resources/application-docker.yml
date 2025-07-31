@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/euleops?currentSchema=notification
+    username: postgres
+    password: LeiserHazard1996!
+  jpa:
+    hibernate:
+      ddl-auto: update          # crea / actualiza tablas
+  kafka:
+    bootstrap-servers: kafka:9092
+
+logging:
+  level:
+    root: INFO

@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ingest.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels: {{- include "ingest.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{- include "ingest.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: ingest
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: {{ .Values.env.KAFKA_BOOTSTRAP_SERVERS | quote }}
+            - name: SCHEMA_REGISTRY_URL
+              value: {{ .Values.env.SCHEMA_REGISTRY_URL | quote }}
+            - name: TRANSACTIONAL_ID
+              value: "{{ .Release.Name }}-ingest"
+          ports:
+            - containerPort: 8080

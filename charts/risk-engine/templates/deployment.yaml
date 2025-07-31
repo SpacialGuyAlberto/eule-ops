@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "risk-engine.fullname" . }}
+  labels:
+    app: {{ include "risk-engine.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "risk-engine.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "risk-engine.fullname" . }}
+    spec:
+      containers:
+        - name: risk-engine
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "risk-engine.fullname" . }}-env
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          resources: {{- toYaml .Values.resources | nindent 12 }}

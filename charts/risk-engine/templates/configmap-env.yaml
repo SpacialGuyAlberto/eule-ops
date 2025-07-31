@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "risk-engine.fullname" . }}-env
+data:
+  KAFKA_BOOTSTRAP_SERVERS: {{ .Values.env.KAFKA_BOOTSTRAP_SERVERS | quote }}
+  SCHEMA_REGISTRY_URL:     {{ .Values.env.SCHEMA_REGISTRY_URL | quote }}
+  MODEL_URI:               {{ .Values.env.MODEL_URI | quote }}
+  FEATURE_STORE_HOST:      {{ .Values.env.FEATURE_STORE_HOST | quote }}
+  GPU_ENABLED:             {{ .Values.env.GPU_ENABLED | quote }}
+  LOG_LEVEL:               {{ .Values.env.LOG_LEVEL | quote }}

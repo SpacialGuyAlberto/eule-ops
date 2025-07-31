@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "alert-service.fullname" . }}-env
+data:
+  KAFKA_BOOTSTRAP_SERVERS: {{ .Values.env.KAFKA_BOOTSTRAP_SERVERS | quote }}
+  SCHEMA_REGISTRY_URL:     {{ .Values.env.SCHEMA_REGISTRY_URL | quote }}
+  ALERT_TOPIC_PREFIX:      {{ .Values.env.ALERT_TOPIC_PREFIX | quote }}
+  RULES_BUCKET:            {{ .Values.env.RULES_BUCKET | quote }}
+  SLACK_WEBHOOK_URL:       {{ .Values.env.SLACK_WEBHOOK_URL | quote }}
+  SMS_PROVIDER_URL:        {{ .Values.env.SMS_PROVIDER_URL | quote }}
+  LOG_LEVEL:               {{ .Values.env.LOG_LEVEL | quote }}

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!-- ───────────── Básico ───────────── -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.euleops</groupId>
+        <artifactId>eule-ops</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+
+    <artifactId>notification-client</artifactId>
+    <name>notification-client</name>
+    <packaging>jar</packaging>
+
+    <!-- ─────────── Propiedades ────────── -->
+    <properties>
+        <openapi.generator.version>7.4.0</openapi.generator.version>
+        <swagger.core.version>2.2.22</swagger.core.version>
+        <feign.version>11.10</feign.version>
+        <jackson.nullable.version>0.2.4</jackson.nullable.version>
+        <javax.annotation.version>1.3.2</javax.annotation.version>
+    </properties>
+
+    <!-- ────────── Dependencias ────────── -->
+    <dependencies>
+        <!-- Starter de Spring-Cloud OpenFeign -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <!-- Implementaciones Feign usadas por el código generado -->
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-jackson</artifactId>
+            <version>${feign.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-okhttp</artifactId>
+            <version>${feign.version}</version>
+        </dependency>
+
+        <!-- Jakarta Bean Validation -->
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+        </dependency>
+
+        <!-- swagger-core v3 (anotaciones + modelos) -->
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger.core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-models</artifactId>
+            <version>${swagger.core.version}</version>
+        </dependency>
+
+        <!-- JsonNullable de OpenAPI -->
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>${jackson.nullable.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>openapi-generator</artifactId>
+            <version>${openapi.generator.version}</version>   <!-- ya lo defines como 7.4.0 -->
+            <!-- sin <scope>, se queda en compile -->
+        </dependency>
+
+        <!-- @Nonnull / @Nullable -->
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+
+        <!-- @Generated -->
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>${javax.annotation.version}</version>
+        </dependency>
+
+        <!-- Lombok en tiempo de compilación -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>2.0.1.Final</version>
+        </dependency>
+    </dependencies>
+
+    <!-- ─────────── Plugins ─────────── -->
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapi.generator.version}</version>
+
+                <executions>
+                    <execution>
+                        <id>generate-client</id>
+                        <goals><goal>generate</goal></goals>
+
+                        <configuration>
+                            <!-- YAML del MS de notificaciones -->
+                            <inputSpec>
+                                ${project.basedir}/../../services/notification-svc/src/main/resources/openapi/notification-api.yaml
+                            </inputSpec>
+
+                            <!-- Generador Spring-Cloud Feign -->
+                            <generatorName>spring</generatorName>
+                            <library>spring-cloud</library>
+
+                            <apiPackage>com.euleops.notification.client.api</apiPackage>
+                            <modelPackage>com.euleops.notification.client.model</modelPackage>
+
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+
+                            <additionalProperties>
+                                <interfaceOnly>true</interfaceOnly>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <useFeignClient>true</useFeignClient>
+                                <jakarta>true</jakarta>
+                                <useJakartaEe>true</useJakartaEe>   <!-- ← cambia javax ➜ jakarta -->
+                                <dateLibrary>java8</dateLibrary>
+                            </additionalProperties>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <!-- 2️⃣  Saltar repackage: este módulo es solo librería -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>repackage</id>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "cti-engine.fullname" . }}-env
+data:
+  KAFKA_BOOTSTRAP_SERVERS: {{ .Values.env.KAFKA_BOOTSTRAP_SERVERS | quote }}
+  SCHEMA_REGISTRY_URL:     {{ .Values.env.SCHEMA_REGISTRY_URL | quote }}
+  GRAPH_DB_URI:            {{ .Values.env.GRAPH_DB_URI | quote }}
+  PDF_BUCKET:              {{ .Values.env.PDF_BUCKET | quote }}
+  KPI_TOPIC:               {{ .Values.env.KPI_TOPIC | quote }}
+  LOG_LEVEL:               {{ .Values.env.LOG_LEVEL | quote }}

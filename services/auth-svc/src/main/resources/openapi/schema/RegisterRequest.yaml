@@ -1,0 +1,13 @@
+components:
+  schemas:
+    RegisterRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          example: alice
+        password:
+          type: string
+          format: password
+          minLength: 8
+      required: [username, password]

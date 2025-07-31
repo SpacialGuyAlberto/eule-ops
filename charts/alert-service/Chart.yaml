@@ -1,0 +1,7 @@
+apiVersion: v2
+name: alert-service
+description: "Rule-based alerting & contingency orchestrator (NestJS)"
+type: application
+
+version: 0.1.1          # chart
+appVersion: "0.7.0"     # imagen

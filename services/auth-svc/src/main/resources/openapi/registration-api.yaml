@@ -1,0 +1,35 @@
+openapi: 3.0.3
+info:
+  title: EuleOps Auth – Registration API
+  version: 1.0.0
+paths:
+  /auth/registration:
+    post:
+      tags: [registration]
+      summary: Register a new user
+      description: Creates the user, generates JWT and triggers a verification e-mail
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Validation error / user already exists
+components:
+  schemas:
+    RegisterRequest:
+      $ref: './schema/RegisterRequest.yaml#/components/schemas/RegisterRequest'
+
+    AuthResponse:
+      $ref: './schema/AuthResponse.yaml#/components/schemas/AuthResponse'
+
+

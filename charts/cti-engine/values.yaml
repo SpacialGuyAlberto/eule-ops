@@ -1,0 +1,31 @@
+replicaCount: 1              # generalmente bastan workers en un pod
+
+image:
+  repository: "{{ .Values.global.imageRegistry }}/cti-engine"
+  tag: "0.6.0"
+  pullPolicy: IfNotPresent
+
+env:
+  KAFKA_BOOTSTRAP_SERVERS: "{{ .Values.global.kafka.bootstrapServers }}"
+  SCHEMA_REGISTRY_URL:     "{{ .Values.global.schemaRegistry.url }}"
+  GRAPH_DB_URI:            "neo4j://neo4j-svc:7687"
+  PDF_BUCKET:              "s3://cti-reports"
+  KPI_TOPIC:               "kpi.cti"
+  LOG_LEVEL:               "INFO"
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 70
+
+service:
+  port: 8000       # expone /health y /pdf/{id}

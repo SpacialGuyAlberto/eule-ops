@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/euleops?currentSchema=auth
+    username: postgres
+    password: LeiserHazard1996!
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        default_schema: auth
+        hbm2ddl.create_namespaces: true
+  kafka:
+    bootstrap-servers: kafka:9092
+
+notification:
+  host: http://notification-svc:8080   # ← usada por @FeignClient
+
+jwt:
+  secret: FmnJx4qH3cDLm+xtt1Cq4eJsEjM3JZE5mkDk4G7etsA=
+  expirationMs: 3600000

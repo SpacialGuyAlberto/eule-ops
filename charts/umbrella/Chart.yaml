@@ -1,0 +1,44 @@
+apiVersion: v2
+name: euleops-platform
+description: "Umbrella chart that installs Kafka + all micro-services"
+type: application
+version: 0.1.0            # versión del umbrella
+appVersion: "0.1.0"       # mostrada en Helm UI
+
+# Declaración de dependencias locales (ruta relativa)
+dependencies:
+  - name: kafka-shared
+    version: 0.1.*
+    repository: "file://../kafka-shared"
+
+  - name: ingest
+    version: 0.1.*
+    repository: "file://../ingest"
+
+  - name: inventory
+    version: 0.1.*
+    repository: "file://../inventory"
+
+  - name: kanban
+    version: 0.1.*
+    repository: "file://../kanban"
+
+  - name: risk-engine
+    version: 0.1.*
+    repository: "file://../risk-engine"
+
+  - name: vrp-solver
+    version: 0.1.*
+    repository: "file://../vrp-solver"
+
+  - name: alert-service
+    version: 0.1.*
+    repository: "file://../alert-service"
+
+  - name: cti-engine
+    version: 0.1.*
+    repository: "file://../cti-engine"
+
+  - name: blockchain-adapter
+    version: 0.1.*
+    repository: "file://../blockchain-adapter"

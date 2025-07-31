@@ -1,0 +1,6 @@
+apiVersion: v2
+name: kafka-shared
+description: "Strimzi Kafka cluster (KRaft) + Schema-Registry + optional MirrorMaker2"
+type: application
+version: 0.1.0                 # versión del chart
+appVersion: "3.6.0"            # versión de Kafka

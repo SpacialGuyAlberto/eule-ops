@@ -1,0 +1,21 @@
+{{- if .Values.mirrorMaker2.enabled }}
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaMirrorMaker2
+metadata:
+  name: {{ include "kafka-shared.fullname" . }}-mm2
+spec:
+  version: {{ .Values.kafkaVersion }}
+  replicas: 1
+  connectCluster: "target"
+  clusters:
+    - alias: source
+      bootstrapServers: {{ .Values.mirrorMaker2.source.bootstrapServers | default "edge-kafka:9092" }}
+    - alias: target
+      bootstrapServers: {{ .Values.mirrorMaker2.target.bootstrapServers | default "kafka-shared-kafka-bootstrap:9092" }}
+  mirrors:
+    - sourceCluster: source
+      targetCluster: target
+      topicsPattern: "raw\\..*|edge_buffer\\..*"
+      replicationPolicyClass: "{{ .Values.mirrorMaker2.replicationPolicy | default "org.apache.kafka.connect.mirror.DefaultReplicationPolicy" }}"
+  resources: {{- toYaml .Values.mirrorMaker2.resources | nindent 4 }}
+{{- end }}

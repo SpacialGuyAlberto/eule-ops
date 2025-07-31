@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DiffGenerationConfig">
+    <option name="sourceModelValue" value="eule-ops:entityManagerFactory" />
+    <option name="targetDbValue" value="8cbc61b0-7bfd-4807-9013-328c90064fe5__euleops_core" />
+  </component>
+</project>

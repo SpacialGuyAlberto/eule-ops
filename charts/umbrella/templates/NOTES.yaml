@@ -1,0 +1,17 @@
+  EuleOps platform deployed! 🦉🚚
+    
+    Useful endpoints
+    ----------------
+  Kafka bootstrap:  {{ .Values.global.kafka.bootstrapServers }}
+  Schema Registry:  {{ .Values.global.schemaRegistry.url }}
+
+  Kanban UI:        http://{{ .Release.Name }}-kanban.{{ .Release.Namespace }}.svc.cluster.local
+  Admin UI:         http://{{ .Release.Name }}-admin.{{ .Release.Namespace }}.svc.cluster.local
+
+  Helm upgrade (dev):
+    helm upgrade --install {{ .Release.Name }} ./charts/umbrella \
+    -f charts/umbrella/values-dev.yaml
+
+  Helm upgrade (prod):
+    helm upgrade --install {{ .Release.Name }} ./charts/umbrella \
+    -f charts/umbrella/values-prod.yaml

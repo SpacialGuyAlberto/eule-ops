@@ -1,36 +1,41 @@
 package com.euleops.core.outbox;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.Id;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Entity
-@Table(name = "outbox_event")
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Table(name = "outbox_event", schema = "core")
+@Getter
+@Setter
 public class OutboxEvent {
 
     @jakarta.persistence.Id
     @Id
-    @GeneratedValue
-    private Long id;
+    private UUID id;
+
     private String aggregateId;
-    private String eventType;
+    @Column(nullable = false, length = 120)
+    private String aggregateType;
 
-    @Lob
-    private String payload;
+    private String type;
 
-    private boolean published;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb", nullable = false)
+    private JsonNode payload;           // o Map<String,Object>
+
+    @Column(name = "created_at", nullable = false)
     private Instant createdAt;
+
+    private Boolean published;
 
 }

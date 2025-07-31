@@ -1,0 +1,21 @@
+global:
+  imageRegistry: registry.dev.local/euleops
+commonResources:
+  limits:
+    cpu: "300m"
+    memory: "256Mi"
+  requests:
+    cpu: "150m"
+    memory: "128Mi"
+
+ingest:
+  replicaCount: 1
+  image:
+    tag: "latest-dev"
+
+risk-engine:
+  replicaCount: 1
+  image:
+    tag: "latest-dev"
+  gpu:
+    enabled: false            # sin GPU en dev

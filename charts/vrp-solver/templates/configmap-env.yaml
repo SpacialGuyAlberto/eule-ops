@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "vrp-solver.fullname" . }}-env
+data:
+  KAFKA_BOOTSTRAP_SERVERS: {{ .Values.env.KAFKA_BOOTSTRAP_SERVERS | quote }}
+  SCHEMA_REGISTRY_URL:     {{ .Values.env.SCHEMA_REGISTRY_URL | quote }}
+  REDIS_URL:               {{ .Values.env.REDIS_URL | quote }}
+  RISK_TOPIC:              {{ .Values.env.RISK_TOPIC | quote }}
+  PLAN_TOPIC:              {{ .Values.env.PLAN_TOPIC | quote }}
+  SOLVE_INTERVAL_SEC:      {{ .Values.env.SOLVE_INTERVAL_SEC | quote }}
+  LOG_LEVEL:               {{ .Values.env.LOG_LEVEL | quote }}

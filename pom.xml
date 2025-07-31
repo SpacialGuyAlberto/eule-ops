@@ -8,6 +8,8 @@
     <groupId>com.euleops</groupId>
     <artifactId>eule-ops</artifactId>
     <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
 
     <!-- ──────────────────── Spring Boot parent ──────────────────── -->
     <parent>
@@ -26,6 +28,26 @@
 
     <!-- ──────────────────── Dependencies ──────────────────── -->
     <dependencies>
+
+        <!-- JWT -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.3</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.3</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId> <!-- o jjwt-gson -->
+            <version>0.11.3</version>
+            <scope>runtime</scope>
+        </dependency>
+
 
         <!-- Web / Validation -->
         <dependency>
@@ -48,6 +70,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -65,9 +88,25 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+            <version>3.2.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-jose</artifactId>
+            <version>6.2.5</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>oauth2-oidc-sdk</artifactId>
+            <version>9.19</version>
         </dependency>
 
         <!-- Web3j para Blockchain Adapter -->
@@ -77,17 +116,16 @@
             <version>4.10.0</version>
         </dependency>
 
-        <!-- Utilidades de código (opcional) -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${mapstruct.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sendgrid</groupId>
+            <artifactId>sendgrid-java</artifactId>
+            <version>4.10.3</version>
         </dependency>
 
         <!-- Test -->
@@ -113,10 +151,6 @@
             <artifactId>neo4j</artifactId>
             <version>1.19.7</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -173,7 +207,79 @@
                 <version>1.18.30</version>
                 <scope>provided</scope>
             </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security</artifactId>
+                <version>3.2.5</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-core</artifactId>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-oauth2-client</artifactId>
+                <version>3.2.5</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-oauth2-jose</artifactId>
+                <version>6.2.5</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.nimbusds</groupId>
+                <artifactId>oauth2-oidc-sdk</artifactId>
+                <version>9.19</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.cdimascio</groupId>
+                <artifactId>java-dotenv</artifactId>
+                <version>5.2.2</version>
+            </dependency>
+
+            <!-- Mail service -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-mail</artifactId>
+                <version>3.2.5</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.sendgrid</groupId>
+                <artifactId>sendgrid-java</artifactId>
+                <version>4.10.3</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+    </repositories>
+
+    <modules>
+        <!-- shared -->
+<!--        <module>libs/common</module>-->
+
+        <!-- microservices -->
+        <module>clients/notification-client</module>
+        <module>services/api-gateway</module>
+        <module>services/auth-svc</module>
+        <module>services/notification-svc</module>
+
+        <!--        <module>services/ingest</module>-->
+<!--        <module>services/kanban</module>-->
+<!--        <module>services/blockchain-adapter</module>-->
+    </modules>
+
+
 
 </project>

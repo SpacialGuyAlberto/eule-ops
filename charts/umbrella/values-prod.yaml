@@ -1,0 +1,26 @@
+global:
+  imageRegistry: registry.prod.euleops
+commonResources:
+  limits:
+    cpu: "1"
+    memory: "1Gi"
+  requests:
+    cpu: "500m"
+    memory: "512Mi"
+
+ingest:
+  replicaCount: 3
+  image:
+    tag: "0.2.3"
+
+risk-engine:
+  replicaCount: 2
+  image:
+    tag: "1.0.0"
+  gpu:
+    enabled: true
+    nvidiaResource: "1"
+
+alert-service:
+  replicaCount: 2
+  slackWebhook: "https://hooks.slack.com/services/T…"

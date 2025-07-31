@@ -1,0 +1,36 @@
+replicaCount: 1               # un solver central; escalar si flota muy grande
+
+image:
+  repository: "{{ .Values.global.imageRegistry }}/vrp-solver"
+  tag: "0.4.0"
+  pullPolicy: IfNotPresent
+
+redis:
+  host: redis-svc
+  port: 6379
+
+env:
+  KAFKA_BOOTSTRAP_SERVERS: "{{ .Values.global.kafka.bootstrapServers }}"
+  SCHEMA_REGISTRY_URL:     "{{ .Values.global.schemaRegistry.url }}"
+  REDIS_URL:               "redis://{{ .Values.redis.host }}:{{ .Values.redis.port }}"
+  RISK_TOPIC:              "risk.edge_score"
+  PLAN_TOPIC:              "plan.route"
+  SOLVE_INTERVAL_SEC:      "300"           # re-plan cada 5 min
+  LOG_LEVEL:               "INFO"
+
+resources:
+  requests:
+    cpu: 300m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 60
+
+service:
+  port: 8000          # REST /plan /reroute

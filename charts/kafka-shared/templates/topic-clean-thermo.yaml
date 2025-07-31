@@ -1,0 +1,12 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: {{ .Values.topics.cleanThermo.name }}
+  labels:
+    strimzi.io/cluster: {{ include "kafka-shared.fullname" . }}
+spec:
+  partitions: {{ .Values.topics.cleanThermo.partitions }}
+  replicas:  {{ .Values.topics.cleanThermo.replicas }}
+  config:
+    retention.ms:  {{ mul .Values.topics.cleanThermo.retentionHours 3600000 }}
+    cleanup.policy: {{ .Values.topics.cleanThermo.cleanupPolicy }}

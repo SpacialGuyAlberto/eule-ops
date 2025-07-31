@@ -1,0 +1,7 @@
+apiVersion: v2
+name: cti-engine
+description: "Circularity & KPI Engine (Python workers + PDF renderer)"
+type: application
+
+version: 0.1.1        # versión Helm chart
+appVersion: "0.6.0"   # versión del contenedor

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "cti-engine.fullname" . }}
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ include "cti-engine.fullname" . }}
+  ports:
+    - name: http
+      port: {{ .Values.service.port }}
+      targetPort: http

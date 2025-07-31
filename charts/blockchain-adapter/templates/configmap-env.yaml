@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "blockchain-adapter.fullname" . }}-env
+data:
+  KAFKA_BOOTSTRAP_SERVERS: {{ .Values.env.KAFKA_BOOTSTRAP_SERVERS | quote }}
+  INCIDENT_TOPIC:          {{ .Values.env.INCIDENT_TOPIC | quote }}
+  POLYGON_RPC_URL:         {{ .Values.env.POLYGON_RPC_URL | quote }}
+  CONTRACT_ADDRESS:        {{ .Values.env.CONTRACT_ADDRESS | quote }}
+  IPFS_API_ENDPOINT:       {{ .Values.env.IPFS_API_ENDPOINT | quote }}
+  BATCH_INTERVAL_SEC:      {{ .Values.env.BATCH_INTERVAL_SEC | quote }}
+  LOG_LEVEL:               {{ .Values.env.LOG_LEVEL | quote }}

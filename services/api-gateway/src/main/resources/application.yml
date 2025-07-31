@@ -1,0 +1,59 @@
+server:
+  port: 8080                 # Gateway accesible en http://localhost:8080
+
+spring:
+  main:
+    web-application-type: reactive   # obliga WebFlux
+
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+        - AddResponseHeader=X-EuleOps-Gateway, true
+
+      routes:
+        # ---------- AUTH ----------
+        - id: auth-service
+          uri: http://localhost:8081        # auth-svc corre en tu IDE o en otro contenedor
+          predicates:
+            - Path=/auth/**                 # incluye /auth/registration
+          # ⬆ Sin StripPrefix → la ruta llega intacta
+          metadata: # ← aquí
+            spring.config.activate.on-profile: "!docker"
+
+        # ---------- NOTIFICATION ----------
+        - id: notification-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/notification/**         # si tu noti-svc espera /notification/...
+          # (Si tu noti-svc expone /api/v1/… y quieres recortar, añade StripPrefix=1)
+          metadata:
+            spring.config.activate.on-profile: "!docker"
+
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        corsConfigurations:
+          '[/**]':
+            allowed-origins: "http://localhost:4200"
+            allowed-methods: "*"
+            allowed-headers: "*"
+            allow-credentials: true
+
+  webflux:
+    cors:
+      allowed-origins: "http://localhost:4200"
+      allowed-methods: "*"
+      allowed-headers: "*"
+      allow-credentials: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: https://auth.euleops.com/realms/euleops/protocol/openid-connect/certs
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus"

@@ -1,0 +1,9 @@
+apiVersion: v2
+name: inventory
+description: "Inventory & Order micro-service (CQRS + Postgres + Kafka)"
+type: application
+
+# Chart version  (no tiene que coincidir con la imagen)
+version: 0.1.4
+# App version  (tag de imagen por defecto)
+appVersion: "0.3.1"

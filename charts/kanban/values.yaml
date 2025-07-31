@@ -1,0 +1,36 @@
+replicaCount: 2
+
+image:
+  repository: "{{ .Values.global.imageRegistry }}/kanban"
+  tag: "0.5.0"
+  pullPolicy: IfNotPresent
+
+postgres:
+  host: postgres-svc
+  port: 5432
+  database: kanbandb
+  user: kanban
+  password: kanban123
+
+env:
+  DB_URL: "postgresql://{{ .Values.postgres.user }}:{{ .Values.postgres.password }}@{{ .Values.postgres.host }}:{{ .Values.postgres.port }}/{{ .Values.postgres.database }}"
+  KAFKA_BOOTSTRAP_SERVERS: "{{ .Values.global.kafka.bootstrapServers }}"
+  WS_CHANNEL_BUFFER: "1000"
+  LOG_LEVEL: "INFO"
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+
+service:
+  port: 8000      # FastAPI HTTP + WS

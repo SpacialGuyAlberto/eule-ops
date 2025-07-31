@@ -1,0 +1,11 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: {{ .Values.topics.orderCreated.name }}
+  labels:
+    strimzi.io/cluster: {{ include "kafka-shared.fullname" . }}
+spec:
+  partitions: {{ .Values.topics.orderCreated.partitions }}
+  replicas:  {{ .Values.topics.orderCreated.replicas }}
+  config:
+    retention.ms:  {{ mul .Values.topics.orderCreated.retentionHours 3600000 }}

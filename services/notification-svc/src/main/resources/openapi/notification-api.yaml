@@ -1,0 +1,58 @@
+openapi: 3.0.3
+info:
+  title: EuleOps Notification Service
+  version: 1.0.0
+
+paths:
+  /notifications/email:
+    post:
+      summary: Send e-mail
+      operationId: sendEmail          # operación única
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendNotificationRequest'
+      responses:
+        '200':
+          description: Sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendNotificationResponse'
+
+components:
+  schemas:
+
+    Channel:
+      type: string
+      enum: [EMAIL, SMS]
+
+    Status:
+      type: string
+      enum: [SENT, FAILED]
+
+    SendNotificationRequest:
+      type: object
+      required: [to, subject, content, channel]
+      properties:
+        to:
+          type: string
+          format: email
+        subject:
+          type: string
+        content:
+          type: string
+        channel:
+          $ref: '#/components/schemas/Channel'
+
+    SendNotificationResponse:
+      type: object
+      required: [id, status]
+      properties:
+        id:
+          type: integer
+          format: int64
+        status:
+          $ref: '#/components/schemas/Status'

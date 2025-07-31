@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "blockchain-adapter.fullname" . }}
+  labels:
+    app: {{ include "blockchain-adapter.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "blockchain-adapter.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "blockchain-adapter.fullname" . }}
+    spec:
+      containers:
+        - name: blockchain-adapter
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "blockchain-adapter.fullname" . }}-env
+          env:
+              - name: WALLET_PRIVATE_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ .Values.env.WALLET_PRIVATE_KEY_SECRET }}
+                    key: key
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          resources: {{- toYaml .Values.resources | nindent 12 }}
